@@ -26,17 +26,42 @@ def get_all_planets():
     response = []
     for planet in planets:
         planet_dict = {
-            "id": planets.id,
-            "name": planets.name,
-            "diameter": planets.diameter,
-            "gravity": planets.gravity,
-            "color": planets.color,
-            "has_moon": planets.has_moon,
+            "id": planet.id,
+            "name": planet.name,
+            "diameter": planet.diameter,
+            "gravity": planet.gravity,
+            "color": planet.color,
+            "has_moon": planet.has_moon,
 
         }
         response. append(planet_dict)
     return jsonify(response), 200
 
+@planets_bp.route("/<planet_id>", methods = ["GET"])
+def get_one_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        response_str = "Invalid planet id"
+        return jsonify({"message": response_str}), 400
 
-    
+    for planet in planets:
+        if planet.id == planet_id:
+            planet_dict = {
+                "id": planet.id,
+                "name": planet.name,
+                "diameter": planet.diameter,
+                "gravity": planet.gravity,
+                "color": planet.color,
+                "has_moon": planet.has_moon,
+            }
+            return jsonify(planet_dict), 200
+
+    response_message = "Could not find the planet id"
+    return jsonify({"message": response_message}), 400
+
+
+
+
+
 
