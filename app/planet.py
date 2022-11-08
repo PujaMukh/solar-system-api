@@ -120,4 +120,29 @@ def add_planet():
 
     return {"id": new_planet.id}, 201
 
+
+@planets_bp.route("/<planet_id>", methods=["PUT"])
+def update_planet_with_new_vals(planet_id):
+
+    # chosen_bike = get_one_bike_or_abort(bike_id)
+    chosen_planet = get_one_planet_or_abort(planet_id)
+
+    request_body = request.get_json()
+
+    if "name" not in request_body:
+        return jsonify({"message":"Request must include name"}), 400
+
+    chosen_planet.name = request_body["name"]
+    db.session.commit()
+    return jsonify({f"message": f"Successfully replaced planet with id `{planet_id}`"}), 200
+
+@planets_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_one_planet(planet_id):
+    # chosen_bike = get_one_bike_or_abort(bike_id)
+    chosen_planet = get_one_planet_or_abort(planet_id)
+    db.session.delete(chosen_planet)
+    db.session.commit()
+    return jsonify({"message": f"Successfully deleted planet with id `{planet_id}`"}), 200
+
+
     
